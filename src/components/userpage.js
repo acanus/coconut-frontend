@@ -16,19 +16,18 @@ import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { IDetailsColumnRenderTooltipProps } from 'office-ui-fabric-react/lib/DetailsList';
 import onRenderDetailsHeader from './renderheader'
 import Newuser from './newuser'
+import NewRole from './newrole'
 
 
 class UserPage extends Component {
     constructor(props) {
 
-        super(props);
-        
+        super(props);    
         this.state = {
             user:{username:'',name:'',role:''}, 
             items:[ 
             ], 
             itemsRender:[],
-           
         }
         this._IDs=[];
         this._columns = [
@@ -44,14 +43,16 @@ class UserPage extends Component {
         this.onUserNameTextChange=this.onUserNameTextChange.bind(this)
         this.onFirstNameTextChange=this.onFirstNameTextChange.bind(this)
         this.state.itemsRender=this.state.items
+        this.onSelectIDs = this.onSelectIDs.bind(this)
+        this.onUpdate = this.onUpdate.bind(this)
 
         this._selection = new Selection({
             onSelectionChanged: this._onItemsSelectionChanged,
             id : null
           })
+        
     }
-    
-    componentDidMount(){
+    onUpdate(){
         axios.get(this.props.url+'/api/user/IsLogin').then((Response)=>{
             if (Response.data){
                 axios.get(this.props.url+'/api/user/CurrentUser').then((Respone1)=>{
@@ -82,13 +83,15 @@ class UserPage extends Component {
                     )
                 })
                 
-                this.setState({items:userlist})
-                this.state.itemsRender = this.state.items
+                this.setState({items:userlist, itemsRender: userlist})
             }
            
       })
-
     }
+    componentDidMount(){
+        this.onUpdate();
+    }
+
     onUserNameTextChange(_,text) {
         return(
         this.setState((prevState)=>{
@@ -117,7 +120,7 @@ class UserPage extends Component {
              
         })
         for (var i =0; i< this._IDs.length;i++)
-        {
+        {        
             axios.get(this.props.url+'/api/user/deleteuser', 
             {params: {id: this._IDs[i]}})
         }
@@ -129,6 +132,19 @@ class UserPage extends Component {
             }
         })
     }
+    onSelectIDs(){
+        this._IDs = []
+        const _id = this.state.items.filter((item, index) => {
+            if (this._selection.isIndexSelected(index))
+            {
+              let list_ids = this._IDs
+              list_ids.push(item.ID)
+              this._IDs= list_ids
+            }
+             
+        })
+    }
+
     handleLogout(e){
         e.preventDefault();  
         axios.post(this.props.url+'/api/user/Logout','',{
@@ -143,16 +159,19 @@ class UserPage extends Component {
         alert(`Item invoked: ${item.name}`);
       };
     
+
     render() {
         
         return ( 
             
             <div className='userpage'>
-                {this.state.modalOpen?<Newuser url={this.props.url} onClose={(e)=>{e.preventDefault(); this.setState({modalOpen:false});}}></Newuser>:null}
+
+                {this.state.isSetRole?<NewRole IDs = {this._IDs} url={this.props.url} onClose={(e)=>{e.preventDefault(); this.setState({isSetRole:false}); this.onUpdate()}}></NewRole>:null}
+                {this.state.modalOpen?<Newuser url={this.props.url} onClose={(e)=>{e.preventDefault(); this.setState({modalOpen:false})}}></Newuser>:null}
                 <div className='navheader'>
                     <div className='leftHeader'>
                         <Label className='headerTitle'>
-                            Quản lý người dùng
+                            Quản lý người dùng  
                         </Label>
                     </div>
                     <div className="rightHeader">
@@ -189,10 +208,10 @@ class UserPage extends Component {
                         <TextField label="Tên:" onChange={this.onFirstNameTextChange} placeholder='vd: Văn A' />
                         <div style={{paddingLeft:'20px'}}></div>
                    
-                        
-                        <PrimaryButton text = 'Xóa' onClick={this.onRemoveRow} style={{margin:'29px 0 0 0', width: '100px'}}>
-                            <Icon iconName='Delete'/>
-                        </PrimaryButton>
+                        <PrimaryButton text='Phân quyền'  onClick={(e)=> {e.preventDefault(); this.onSelectIDs(); this.setState({isSetRole:true})}} style={{margin:'29px 0 0 0', width: '100px'}}>
+                            <Icon iconName='Edit'/>
+                        </PrimaryButton>  
+              
                         <div style={{paddingLeft:'20px'}}></div>
                         {/* <PrimaryButton text='Thêm' href='/#register' style={{margin:'29px 0 0 0', width: '100px'}}>
                             <Icon iconName='Add'/>
@@ -201,11 +220,15 @@ class UserPage extends Component {
                         <PrimaryButton text='Thêm'  onClick={(e)=> {e.preventDefault(); this.setState({modalOpen:true})}} style={{margin:'29px 0 0 0', width: '100px'}}>
                             <Icon iconName='Add'/>
                         </PrimaryButton>  
+                        <div style={{paddingLeft:'20px'}}></div>
+                        <PrimaryButton text = 'Xóa' onClick={this.onRemoveRow} style={{margin:'29px 0 0 0', width: '100px'}}>
+                            <Icon iconName='Delete'/>
+                        </PrimaryButton>
                     </div>
                     <ScrollablePane className='pane' scrollbarVisibility={ScrollbarVisibility.auto}>
                         <DetailsList
                             selection={this._selection}
-                            items={this.state.itemsRender}
+                            items={this.state.items}
                             columns={this._columns}
                             setKey="set"
                             layoutMode={DetailsListLayoutMode.justified}

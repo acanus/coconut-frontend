@@ -110,7 +110,7 @@ class Newuser extends Component {
                 </Modal>
                 <Modal isOpen={true} style={{overflowY:'hidden'}}>
                     <div className='userdatabox' >
-                        <h3 style = {{alignItems:'center',display:'flex',flexDirection:'column'}}>TAO TAI KHOAN MOI</h3>
+                        <h3 style = {{alignItems:'center',display:'flex',flexDirection:'column'}}>TẠO TÀI KHOẢN MỚI</h3>
                         <form style={{alignItems:'center',display:'flex',flexDirection:'column'}} onSubmit={this.handleSubmit}>
                             <div style={{display:'flex', flexDirection:'column'}} >
                                 <TextField ref = {info => {this.infoname = info}} style={{textAlign:'center'}} className='inputbox' label='Tên đăng nhập' placeholder='Tên đăng nhập mới' name='username'></TextField>

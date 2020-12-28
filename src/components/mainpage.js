@@ -4,6 +4,7 @@ import './mainpage.scss';
 import { DefaultButton, PrimaryButton, Stack, IStackTokens ,Modal,IconButton} from 'office-ui-fabric-react';
 import { Text } from 'office-ui-fabric-react/lib/Text';
 import { DetailsList, DetailsListLayoutMode, Selection, IColumn,SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
+import { ScrollablePane, ScrollbarVisibility } from 'office-ui-fabric-react/lib/ScrollablePane';
 import Emegency from './emegency.js'
 import {Link, NavLink} from 'react-router-dom'
 import axios from 'axios'
@@ -78,6 +79,7 @@ class MainPage extends Component {
     
     componentDidMount(){
         this.CheckLogin();
+        this.updateTransport();
         axios.get(this.props.url+'/api/user/IsLogin').then((Response)=>{
             if (Response.data){
                 axios.get(this.props.url+'/api/user/CurrentUser').then((Respone1)=>{
@@ -230,10 +232,10 @@ class MainPage extends Component {
             if (Response.data){
                 const transportData=[
                     {key:1,name:'Lượt vận chuyển',value:Response.data.TransportID},
-                    {key:2,name:'Tổng số lượng',value:2},
-                    {key:3,name:'Tổng khối lượng',value:2},
+                    {key:2,name:'Tổng số lượng',value:Response.data.Count},
+                    {key:3,name:'Tổng khối lượng',value:Response.data.Weight},
                     {key:4,name:'Thời gian bắt đầu',value:Response.data.StartTime},
-                    {key:5,name:'Thời gian kết thúc',value:2},
+                    {key:5,name:'Thời gian kết thúc',value:Response.data.EndTime},
                 ]
                 this.setState({items2:transportData})
             }
@@ -274,6 +276,8 @@ class MainPage extends Component {
     //     })
     // }
     render() { 
+        const scrollContainerStyle = { width: "auto", maxHeight: window.innerHeight-80};
+     
         return ( 
             <div className='mainlayout'>
                 {this.state.showEmegency?<Emegency url={this.props.url}  onClose={(e)=>{e.preventDefault(); this.setState({showEmegency:false})}}></Emegency>:null}
@@ -389,7 +393,8 @@ class MainPage extends Component {
                         <img  src={this.props.url+"/api/stream/cameraview"} width={'auto'} height={'auto'} style={{border:'0px'}}> 
                         </img>
                     </div>
-                    <div className="rightcontent">
+                    
+                    <div className="rightcontent" style={scrollContainerStyle}>        
                     <DetailsList
                         items={this.state.items3}
                         columns={this._columns3}
@@ -399,6 +404,7 @@ class MainPage extends Component {
                         selectionMode={SelectionMode.none}
                     />
                     </div>
+                    
                     
                  </div>
             </div>

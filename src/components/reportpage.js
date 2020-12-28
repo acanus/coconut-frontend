@@ -64,7 +64,9 @@ class ReportPage extends React.Component{
                 WarehouseLocation: "",
                 Region: "",
                 ImportCode: "",
-                Transporter: ""          
+                Transporter: "",
+                Date: "",
+                EndDate: ""          
             }], 
             items2:[],
         }
@@ -108,6 +110,9 @@ class ReportPage extends React.Component{
             { key: 'column7', name: 'Vị trí lưu kho', fieldName: 'WarehouseLocation', minWidth: 140,  isResizable: true },
             { key: 'column8', name: 'Băng tải lên dừa', fieldName: 'ConveyorID', minWidth: 140,  isResizable: true },
             { key: 'column10', name: 'Thời điểm bắt đầu', fieldName: 'Date', minWidth: 140, maxWidth:160, isResizable: true },
+            { key: 'column11', name: 'Thời điểm kết thúc', fieldName: 'EndDate', minWidth: 140, maxWidth:160, isResizable: true },
+            
+
         ];
         this._columns2 = [
 
@@ -163,7 +168,7 @@ class ReportPage extends React.Component{
         { key: 'WarehouseLocation', text: 'Vị trí lưu kho'},
       ];
       componentDidMount(){
-        this.setState({searchEndTime: moment(Date.now()).format("YYYY-MM-DDTHH:MM:00.000")})
+        this.setState({searchEndTime: moment(Date.now()).add(1,'days').format("YYYY-MM-DDTHH:MM:00.000")})
         this.setState({searchStartTime: moment(Date.now()).subtract(10, 'days').format("YYYY-MM-DDTHH:MM:00.000")})
         axios.get('http://localhost:9000/api/data/get10daysimportsessions').then(res=>{
             this.setState({items:res.data})
@@ -267,8 +272,9 @@ class ReportPage extends React.Component{
                                     Region:value.Region,
                                     Transporter:value.Transporter,
                                     WarehouseLocation:value.WarehouseLocation,
-                                    ConveyorID:value.ConveyorID
-
+                                    ConveyorID:value.ConveyorID==0?'Băng tải 2':'Cả hai băng tải',
+                                    Date: value.Date,
+                                    EndDate: value.EndDate
                                 }
                             })}
                             columns={this._columns}

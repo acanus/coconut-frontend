@@ -38,7 +38,8 @@ class LoginPage extends Component {
            }
            else{
 
-               this.props.history.push('/')
+               //this.props.history.push('/')
+               window.history.back()
                
            }
         }).catch((error)=>{
