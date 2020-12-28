@@ -14,7 +14,8 @@ import {
   } from 'office-ui-fabric-react/lib/index';
 
 import axios from 'axios';
-
+import myStore from './myStore'
+const auth = 'bearer '+Object.values(myStore.state).join('')
 
 class Newuser extends Component {
     constructor(props) {
@@ -73,6 +74,7 @@ class Newuser extends Component {
                 }),{
                 headers: {
                 'Content-Type':'application/json',
+                'Authorization':auth,
                 "Access-Control-Allow-Origin": "*"
                 }
             }).then((Response)=>{
@@ -110,7 +112,7 @@ class Newuser extends Component {
                 </Modal>
                 <Modal isOpen={true} style={{overflowY:'hidden'}}>
                     <div className='userdatabox' >
-                        <h3 style = {{alignItems:'center',display:'flex',flexDirection:'column'}}>TAO TAI KHOAN MOI</h3>
+                        <h3 style = {{alignItems:'center',display:'flex',flexDirection:'column'}}>TẠO TÀI KHOẢN MỚI</h3>
                         <form style={{alignItems:'center',display:'flex',flexDirection:'column'}} onSubmit={this.handleSubmit}>
                             <div style={{display:'flex', flexDirection:'column'}} >
                                 <TextField ref = {info => {this.infoname = info}} style={{textAlign:'center'}} className='inputbox' label='Tên đăng nhập' placeholder='Tên đăng nhập mới' name='username'></TextField>

@@ -12,6 +12,8 @@ import {
     SelectableOptionMenuItemType,
   } from 'office-ui-fabric-react/lib/index';
 import axios from 'axios'
+import myStore from './myStore'
+const auth = 'bearer '+Object.values(myStore.state).join('')
 class NewImportSession extends Component {
     constructor(props) {
         super(props);
@@ -82,7 +84,7 @@ class NewImportSession extends Component {
             }),{
             headers: {
             'Content-Type':'application/json',
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
             }
         }).then((Response)=>{
            if(!Response.data)

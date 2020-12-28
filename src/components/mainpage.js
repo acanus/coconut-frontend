@@ -10,6 +10,7 @@ import axios from 'axios'
 import { Icon } from '@fluentui/react/lib/Icon';
 import NewImportSession from './newimportsession'
 import ConveyorControl from './conveyorControl'
+import myStore from './myStore'
 class MainPage extends Component {
     constructor(props) {
 
@@ -170,6 +171,7 @@ class MainPage extends Component {
             "Access-Control-Allow-Origin": "*"
             }
         })
+        myStore.setState('')
         this.props.history.push('/login')
     }
     _onItemInvoked(item) {
@@ -230,10 +232,10 @@ class MainPage extends Component {
             if (Response.data){
                 const transportData=[
                     {key:1,name:'Lượt vận chuyển',value:Response.data.TransportID},
-                    {key:2,name:'Tổng số lượng',value:2},
-                    {key:3,name:'Tổng khối lượng',value:2},
+                    {key:2,name:'Tổng số lượng',value:Response.data.Count},
+                    {key:3,name:'Tổng khối lượng',value:Response.data.Weight},
                     {key:4,name:'Thời gian bắt đầu',value:Response.data.StartTime},
-                    {key:5,name:'Thời gian kết thúc',value:2},
+                    {key:5,name:'Thời gian kết thúc',value:Response.data.EndTime},
                 ]
                 this.setState({items2:transportData})
             }

@@ -9,7 +9,10 @@ import { DefaultButton, PrimaryButton, Stack, IStackTokens,Modal } from 'office-
 import { Link, Text } from 'office-ui-fabric-react';
 import { position } from 'custom-electron-titlebar/lib/common/dom';
 import axios from 'axios';
+import myStore from './myStore';
+const auth='' ;
 class LoginPage extends Component {
+    
     constructor(props) {
         super(props);
         this.state = { 
@@ -21,27 +24,49 @@ class LoginPage extends Component {
     }
     handleLogin(event)
     {
+        let username = event.target.username.value
+        let password = event.target.password.value
         event.preventDefault()
         this.setState({logging:true})
         axios.post(this.props.url+'/api/user/Login',JSON.stringify({
-            username:event.target.username.value,
-            password:event.target.password.value
+            username:username,
+            password:password
             }),{
             headers: {
             'Content-Type':'application/json',
             "Access-Control-Allow-Origin": "*"
             }
         }).then((Response)=>{
+            console.log('ádad')
            if(!Response.data.Result)
            {
                 this.setState({modalOpen:true,logging:false})
            }
            else{
+                console.log(username, password)
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
+                var urlencoded = new URLSearchParams();
+                urlencoded.append("username", username);
+                urlencoded.append("password", password);
+                urlencoded.append("grant_type", "password");
+                urlencoded.append("scope", "data:read");
+                var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: urlencoded,
+                redirect: 'follow'
+                };
+
+                fetch(this.props.url+"/token", requestOptions)
+                .then(response => response.json()).then(r=>myStore.setState(r.access_token))
+                .catch(error => console.log('error', error));
+                auth = 'bearer '+Object.values(myStore.state).join('')
                this.props.history.push('/')
-               
            }
         }).catch((error)=>{
+            console.log(error)
             this.setState({modalOpen:true,logging:false})
 
         })

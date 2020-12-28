@@ -6,9 +6,9 @@ import { TextField, MaskedTextField } from 'office-ui-fabric-react/lib/TextField
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { DefaultButton, PrimaryButton, Stack, IStackTokens,Modal } from 'office-ui-fabric-react';
 import { Link, Text } from 'office-ui-fabric-react';
-
+import myStore from './myStore'
 import axios from 'axios';
-
+const auth = 'bearer '+Object.values(myStore.state).join('')
 
 class RegisterPage extends Component {
     constructor(props) {
@@ -66,7 +66,8 @@ class RegisterPage extends Component {
                 }),{
                 headers: {
                 'Content-Type':'application/json',
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "*",
+                'Authorization':auth
                 }
             }).then((Response)=>{
                 if (Response.data.Result)
@@ -86,7 +87,8 @@ class RegisterPage extends Component {
         axios.post(this.props.url+'/api/user/CreateUser',"asd",{
             headers: {
             'Content-Type':'application/json',
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
+            "Authorization":auth
             }
         })
     }
