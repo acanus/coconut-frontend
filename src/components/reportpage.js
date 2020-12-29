@@ -14,7 +14,7 @@ import onRenderDetailsHeader from './renderheader'
 import axios from 'axios'
 import moment from 'moment'
 import myStore from './myStore'
-
+import MessageError from './modalMessageError'
 const DayPickerStrings = {
     months: ['January','February','March','April','May','June','July','August','September','October','November','December',],
     shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -44,7 +44,7 @@ const classNames = mergeStyleSets({
       margin: 'auto',
     }
   });
-const auth = 'bearer '+Object.values(myStore.state).join('')
+
 
 class ReportPage extends React.Component{
     constructor(){
@@ -55,6 +55,8 @@ class ReportPage extends React.Component{
             searchType:"All",
             searchWhat:"",
             enableImportReport:false,
+            error:'',
+            user:[],
             items:[{ 
                 ID: null,
                 WarehouseUser: [],
@@ -65,7 +67,10 @@ class ReportPage extends React.Component{
                 WarehouseLocation: "",
                 Region: "",
                 ImportCode: "",
-                Transporter: ""          
+                Transporter: "",
+                Date:"" ,
+                Vendor:"",
+                EndTime:""        
             }], 
             items2:[],
         }
@@ -86,7 +91,7 @@ class ReportPage extends React.Component{
                 const ImportID = items.map(item=>{return(item.ID)})
                 var id
                 for (id in ImportID){
-                    axios.get(this.props.url+'/api/data/getTransportSessionbyImportID',{headers:{'Authorization': auth}, params: {ImportID: ImportID[id]}}).then(res=>{
+                    axios.get(this.props.url+'/api/data/getTransportSessionbyImportID',{headers:{'Authorization': myStore.state.auth}, params: {ImportID: ImportID[id]}}).then(res=>{
                         data.push.apply(data,res.data)    
                     })
                     
@@ -109,6 +114,8 @@ class ReportPage extends React.Component{
             { key: 'column7', name: 'Vị trí lưu kho', fieldName: 'WarehouseLocation', minWidth: 140,  isResizable: true },
             { key: 'column8', name: 'Băng tải lên dừa', fieldName: 'ConveyorID', minWidth: 140,  isResizable: true },
             { key: 'column10', name: 'Thời điểm bắt đầu', fieldName: 'Date', minWidth: 140, maxWidth:160, isResizable: true },
+            { key: 'column11', name: 'Thời điểm kết thúc', fieldName: 'EndTime', minWidth: 140, maxWidth:160, isResizable: true },
+            { key: 'column12', name: 'Nhà cung cấp', fieldName: 'Vendor', minWidth: 140, maxWidth:160, isResizable: true }
         ];
         this._columns2 = [
 
@@ -135,12 +142,12 @@ class ReportPage extends React.Component{
     }
     onSearchBox(_,text){
         if (text==""){
-            axios.get(this.props.url+'/api/data/get10daysimportsessions',{headers:{'Authorization': auth}}).then(res=>{
+            axios.get(this.props.url+'/api/data/get10daysimportsessions',{headers:{"Authorization": myStore.state.auth}}).then(res=>{
               this.setState({items:res.data})
             })
         } else {
             axios.get(this.props.url+'/api/data/getsearchbyname', 
-                {headers:{'Authorization': auth},params: {searchType: this.state.searchType, searchWhat: text, searchStartTime: this.state.searchStartTime, searchEndTime: this.state.searchEndTime}}).then(res=>
+                {headers:{'Authorization': myStore.state.auth},params: {searchType: this.state.searchType, searchWhat: text, searchStartTime: this.state.searchStartTime, searchEndTime: this.state.searchEndTime}}).then(res=>
                 this.setState({items:res.data})
             )
         }
@@ -165,31 +172,40 @@ class ReportPage extends React.Component{
         { key: 'WarehouseLocation', text: 'Vị trí lưu kho'},
       ];
     componentDidMount(){
-        
-        // console.log(auth)
+        console.log('reportdidmount: ',myStore.state.auth)
         this.setState({searchEndTime: moment(Date.now()).add(1,'days').format("YYYY-MM-DDTHH:MM:00.000")})
         this.setState({searchStartTime: moment(Date.now()).subtract(10, 'days').format("YYYY-MM-DDTHH:MM:00.000")})
-        axios.get('http://localhost:9000/api/data/get10daysimportsessions',{headers:{'Authorization': auth}}).then(res=>{
+        axios.get(this.props.url+'/api/data/get10daysimportsessions',{headers:{"Authorization": myStore.state.auth}}).then(res=>{
             this.setState({items:res.data})
             // console.log(this.state.items)
-        })
+            axios.get(this.props.url+'/api/user/CurrentUser').then((Respone1)=>{
+                if(Respone1.data)
+                {
+                    // console.log(Respone1.data)
+                    this.setState({user:{username:Respone1.data.username,name:Respone1.data.name,role:Respone1.data.role.Name}})
+                }
+            })
+        }).catch(e=>this.setState({error:e.response.status===401?true:false}))
       }
       handleImportExportPDF(){
-        window.ipcRenderer.send('openpdf',{url:this.props.url+'/api/report/GetImportReportpdf?id='+this._selection.getSelection()[0].ID,title:'Báo cáo nhập hàng'})
-        // axios.get(this.props.url+'/api/report/GetImportReportpdf?id=1',
-        // {
-        //     responseType:'blob'
-        // }
-        // ).then(response=>{
-        //     const url = window.URL.createObjectURL(new Blob([response.data]));
-        //     const link = document.createElement('a');
-        //     link.href = url;
-        //     link.setAttribute('download', 'file.pdf'); //or any other extension
-        //     document.body.appendChild(link);
-        //     link.click();
-          
-        // })
+          for (var x in this._selection.getSelection()){
+            let title='Báo cáo nhập hàng mã lô dừa: '+this._selection.getSelection()[x].ImportCode
+            window.ipcRenderer.send('openpdf',{url:this.props.url+'/api/report/GetImportReportpdf?id='+this._selection.getSelection()[x].ID,
+                                                title:title})
+          }
       }
+      handleLogout(e){
+        e.preventDefault(); 
+        axios.post(this.props.url+'/api/user/Logout','',{
+            headers: {
+            'Content-Type':'application/json',
+            "Access-Control-Allow-Origin": "*",
+            }
+        }).catch(e=>console.log(e))
+        localStorage.setItem('token','')
+        myStore.setState({auth:''})
+        window.location.href='/#/login'
+    }
     render(){
         return(
             <div className='reportpage'>
@@ -245,12 +261,29 @@ class ReportPage extends React.Component{
                         
                     </div>
                     <div className='rightHeader'>
-                        <PrimaryButton className='headerButtonText' text="Xuất báo cáo tháng" />
-                        <PrimaryButton className='headerButtonText' text="Xuất báo cáo theo User" />
-                      
+                        <div className='personaContainer' >                               
+                            <div className='personaIcon'>
+                                <Icon iconName='UserOptional' style={{color:'white'}}></Icon>
+                            </div>
+                            <div className='personaDescription'>
+                                <div className='header'>
+                                    {this.state.user.name}
+                                </div>
+                                <div className='description'>
+                                    {this.state.user.role}
+                                </div>
+                            </div>
+                        </div>
+                        <div className='headerButton'  onClick={(e)=>{this.handleLogout(e)}}>
+                            <Icon iconName='SignOut' >
+
+                            </Icon>
+                            
+                        </div>        
                     </div>
                 </div>
                 <div className="contentContainer">
+                    {this.state.error?<MessageError message='Bạn không có quyền truy cập' onClose={(e)=>{e.preventDefault(); this.setState({error:false})}}></MessageError>:null}
                     <div style={{width:'100%', display:'flex',flexDirection:'row',alignItems:'center',marginRight:'20px'}}>
                         <Label className='textContent'>Lượt nhập hàng</Label>
                         <DefaultButton style={{marginRight:'0px',marginLeft:'auto'}} disabled={!this.state.enableImportReport} text="Xuất báo cáo"  onClick={(e)=>{e.preventDefault();
@@ -271,8 +304,10 @@ class ReportPage extends React.Component{
                                     Region:value.Region,
                                     Transporter:value.Transporter,
                                     WarehouseLocation:value.WarehouseLocation,
-                                    ConveyorID:value.ConveyorID==0?'Băng tải 2':'Cả hai băng tải'
-
+                                    ConveyorID:value.ConveyorID==0?'Băng tải 2':'Cả hai băng tải',
+                                    Date: value.Date,
+                                    EndTime: value.EndTime,
+                                    Vendor: value.Vendor
                                 }
                             })}
                             columns={this._columns}

@@ -76,8 +76,8 @@ class MaintenancePage extends Component {
                 <div className='maintenancebox'>
                 <h3>Chế độ thủ công</h3>    
                     <div className='buttonbox'>                                
-                    <PrimaryButton className={this.state.Cv1IsRun? 'StopStatus' : 'RunStatus'} style={{margin:'4px'}} onClick={(e)=>{e.preventDefault();this.handleSelectCV1()}}>Băng tải 1</PrimaryButton>
-                    <PrimaryButton className={this.state.Cv2IsRun? 'StopStatus' : 'RunStatus'} style={{margin:'4px'}} onClick={(e)=>{e.preventDefault();this.handleSelectCV2()}}>Băng tải 2</PrimaryButton>
+                    <PrimaryButton className={this.state.Cv1IsRun? 'RunStatus' : 'StopStatus'} style={{width:'110px', margin:'4px', alignItems:'center', justifyContent:'center'}} onClick={(e)=>{e.preventDefault();this.handleSelectCV1()}}>Băng tải 1</PrimaryButton>
+                    <PrimaryButton className={this.state.Cv2IsRun? 'RunStatus' : 'StopStatus'} style={{width:'110px', margin:'4px', alignItems:'center', justifyContent:'center'}} onClick={(e)=>{e.preventDefault();this.handleSelectCV2()}}>Băng tải 2</PrimaryButton>
                     </div>               
                 </div>        
             </div>

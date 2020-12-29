@@ -9,8 +9,8 @@ import { DefaultButton, PrimaryButton, Stack, IStackTokens,Modal } from 'office-
 import { Link, Text } from 'office-ui-fabric-react';
 import { position } from 'custom-electron-titlebar/lib/common/dom';
 import axios from 'axios';
+import qs from 'qs';
 import myStore from './myStore';
-const auth='' ;
 class LoginPage extends Component {
     
     constructor(props) {
@@ -44,26 +44,24 @@ class LoginPage extends Component {
            }
            else{
                 console.log(username, password)
-                var myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-                var urlencoded = new URLSearchParams();
-                urlencoded.append("username", username);
-                urlencoded.append("password", password);
-                urlencoded.append("grant_type", "password");
-                urlencoded.append("scope", "data:read");
-                var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: urlencoded,
-                redirect: 'follow'
-                };
-
-                fetch(this.props.url+"/token", requestOptions)
-                .then(response => response.json()).then(r=>myStore.setState(r.access_token))
+                axios({
+                    method: 'post',
+                    url: this.props.url+'/token',
+                    data: qs.stringify({
+                      username: username,
+                      password: password,
+                      grant_type:'password',
+                    }),
+                    headers: {
+                      'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+                    }
+                  })
+                .then(response => myStore.setState({auth:'bearer '+response.data.access_token}))
                 .catch(error => console.log('error', error));
-                auth = 'bearer '+Object.values(myStore.state).join('')
+                // console.log('store: ',myStore.state.auth)
+                localStorage.setItem('token',myStore.state.auth)
                this.props.history.push('/')
+             
            }
         }).catch((error)=>{
             console.log(error)
@@ -71,14 +69,18 @@ class LoginPage extends Component {
 
         })
         
-               
+    
+    }
+    componentDidMount(){
+        // myStore.setState({auth:localStorage.getItem('token')})
+        console.log('logindidmount ',localStorage.getItem('token'))
     }
     render() { 
         return ( 
             <div className='logincontainer'>
 
                 <div class="bgimage"></div>
-                <DefaultButton onClick={(e)=>{e.preventDefault();window.history.back()}} style={{position:'absolute',left:'40px',top:'40px'}} >Quay về</DefaultButton>
+                {/* <DefaultButton onClick={(e)=>{e.preventDefault();window.history.back()}} style={{position:'absolute',left:'40px',top:'40px'}} >Quay về</DefaultButton> */}
                 <Modal isOpen={this.state.modalOpen} >
                     <h3 style={{marginLeft:'20px'}} >{this.state.error.title}</h3>
                    <p style={{marginLeft:'20px'}}>{this.state.error.message}</p>

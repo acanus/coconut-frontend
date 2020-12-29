@@ -8,14 +8,15 @@ import { DefaultButton, PrimaryButton, Stack, IStackTokens,Modal } from 'office-
 import { Link, Text } from 'office-ui-fabric-react';
 import myStore from './myStore'
 import axios from 'axios';
-const auth = 'bearer '+Object.values(myStore.state).join('')
+import MessageError from './modalMessageError'
 
 class RegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             modalOpen:false,
-            modalMessage:'Tài khoản đã tồn tại'
+            modalMessage:'Tài khoản đã tồn tại',
+            error:false,
          }
          this.handleSubmit= this.handleSubmit.bind(this)
     }
@@ -67,7 +68,7 @@ class RegisterPage extends Component {
                 headers: {
                 'Content-Type':'application/json',
                 "Access-Control-Allow-Origin": "*",
-                'Authorization':auth
+                'Authorization':myStore.state.auth
                 }
             }).then((Response)=>{
                 if (Response.data.Result)
@@ -80,7 +81,7 @@ class RegisterPage extends Component {
                         modalMessage:Response.data.Message
                     })
                 }
-            })
+            }).catch(e=>this.setState({error:e.response.status===401?true:false}))
         }
       }
     handleClick(){
@@ -88,7 +89,7 @@ class RegisterPage extends Component {
             headers: {
             'Content-Type':'application/json',
             "Access-Control-Allow-Origin": "*",
-            "Authorization":auth
+            "Authorization":myStore.state.auth
             }
         })
     }
@@ -97,6 +98,7 @@ class RegisterPage extends Component {
             <div className='registercontainer'>
                 <div class="bgimage"></div>
                 <DefaultButton onClick={(e)=>{e.preventDefault();window.history.back()}} style={{position:'absolute',left:'40px',top:'40px'}} >Quay về</DefaultButton>
+                {this.state.error?<MessageError message='Dùng quyền Admin/Manager để tạo tài khoản' onClose={(e)=>{e.preventDefault(); this.setState({error:false})}}></MessageError>:null}
                 <Modal isOpen={this.state.modalOpen} >
                     <h3 style={{marginLeft:'20px'}} >Error</h3>
                     <p style={{marginLeft:'20px'}}>{this.state.modalMessage}</p>

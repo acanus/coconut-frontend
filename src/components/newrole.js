@@ -11,7 +11,6 @@ import {
 
 import axios from 'axios';
 import myStore from './myStore'
-const auth = 'bearer '+Object.values(myStore.state).join('')
 class NewRole extends Component {
     constructor(props) {
         super(props);
@@ -29,12 +28,12 @@ class NewRole extends Component {
             for (var i =0; i< this.props.IDs.length;i++)
             {        
               
-                axios.get(this.props.url+'/api/user/SetRole',{params:{id: this.props.IDs[i], Role: "Admin"}},
+                axios.get(this.props.url+'/api/user/SetRole',{headers:{"Authorization":myStore.state.auth},params:{id: this.props.IDs[i], Role: "Admin"}},
                 {
                     headers: {
                     'Content-Type':'application/json',
                     "Access-Control-Allow-Origin": "*",
-                    "Authorization":auth
+                    
                     }
                 }).then((Response)=>{
                    if(!Response.data)
@@ -52,12 +51,11 @@ class NewRole extends Component {
         {
             for (var i =0; i< this.props.IDs.length;i++)
             {        
-                axios.get(this.props.url+'/api/user/SetRole',{params:{id: this.props.IDs[i], Role: "Manager"}},
+                axios.get(this.props.url+'/api/user/SetRole',{headers:{"Authorization":myStore.state.auth},params:{id: this.props.IDs[i], Role: "Manager"}},
                 {
                     headers: {
                     'Content-Type':'application/json',
                     "Access-Control-Allow-Origin": "*",
-                    "Authorization":auth
                     }
                 }).then((Response)=>{
                    if(!Response.data)
@@ -74,12 +72,12 @@ class NewRole extends Component {
         {
             for (var i =0; i< this.props.IDs.length;i++)
             {        
-                axios.get(this.props.url+'/api/user/SetRole',{params:{id: this.props.IDs[i], Role: "Monitor"}},
+                axios.get(this.props.url+'/api/user/SetRole',{headers:{"Authorization":myStore.state.auth},params:{id: this.props.IDs[i], Role: "Monitor"}},
                 {
                     headers: {
                     'Content-Type':'application/json',
                     "Access-Control-Allow-Origin": "*",
-                    "Authorization":auth
+                    
                     }
                 }).then((Response)=>{
                    if(!Response.data)

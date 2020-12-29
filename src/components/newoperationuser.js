@@ -1,6 +1,9 @@
 import React from 'react'
 import {TextField, PrimaryButton, Modal} from '@fluentui/react'
 import axios from 'axios'
+import myStore from './myStore'
+import MessageError from './modalMessageError'
+const auth = 'bearer '+Object.values(myStore.state).join('')
 class NewOperationUser extends React.Component{
     constructor(props){
         super(props);
@@ -11,11 +14,11 @@ class NewOperationUser extends React.Component{
     handleSubmit(e){
         e.preventDefault();
         console.log('aaa')
-        axios.get(this.props.url+'/api/data/AddOperationUser',{params:{name: this.state.operationUserName,}},
+        axios.get(this.props.url+'/api/data/AddOperationUser',{headers: {"Authorization":auth},params:{name: this.state.operationUserName,}},
         {
             headers: {
             'Content-Type':'application/json',
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
             }
         }).then((Response)=>{
            if(!Response.data)
@@ -25,7 +28,7 @@ class NewOperationUser extends React.Component{
            else{
                this.props.onClose(e)
            }
-        })
+        }).catch(e=>this.setState({error:e.response.status===401?true:false}))
     }
     render(){
         return(

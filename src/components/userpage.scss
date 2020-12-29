@@ -103,11 +103,14 @@
         align-items: center;
         margin: 0px 12px;
         .personaIcon{
-            border: 2px solid rgb(0, 53, 133);
+            border: 2px solid #6BB700;
             width: 36px;
             height: 36px;
-            background-color: #ffffff6c;
+            background-color: #00000000;
             border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
         }
         .personaDescription{
             .header{
