@@ -73,7 +73,7 @@ class MainPage extends Component {
               
             }
             else{
-                //this.props.history.push('/login')
+                this.props.history.push('/login')
             }
       })
     }
@@ -96,7 +96,7 @@ class MainPage extends Component {
                 })
             }
             else{
-                //window.location.href='/#login'
+                this.props.history.push('/login')
             }
       })
       

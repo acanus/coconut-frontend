@@ -97,7 +97,7 @@ class RegisterPage extends Component {
         return ( 
             <div className='registercontainer'>
                 <div class="bgimage"></div>
-                <DefaultButton onClick={(e)=>{e.preventDefault();window.history.back()}} style={{position:'absolute',left:'40px',top:'40px'}} >Quay về</DefaultButton>
+                <DefaultButton onClick={(e)=>{e.preventDefault();this.props.history.goBack()}} style={{position:'absolute',left:'40px',top:'40px'}} >Quay về</DefaultButton>
                 {this.state.error?<MessageError message='Dùng quyền Admin/Manager để tạo tài khoản' onClose={(e)=>{e.preventDefault(); this.setState({error:false})}}></MessageError>:null}
                 <Modal isOpen={this.state.modalOpen} >
                     <h3 style={{marginLeft:'20px'}} >Error</h3>

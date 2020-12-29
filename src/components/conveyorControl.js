@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './conveyorControl.scss';
+import {withRouter} from 'react-router'
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { TextField, MaskedTextField } from 'office-ui-fabric-react/lib/TextField';
 import { Label } from 'office-ui-fabric-react/lib/Label';
@@ -43,7 +44,7 @@ class ConveyorControl extends Component {
             this.setState({isload:false})
         })
          this.setState({isload:true})      
-        window.location.href='/#maintenance'
+         this.props.history.push('/maintenance')
     }
 
     handleStartConveyor(e){
@@ -90,4 +91,4 @@ class ConveyorControl extends Component {
     }
 }
  
-export default ConveyorControl;
+export default withRouter(ConveyorControl);

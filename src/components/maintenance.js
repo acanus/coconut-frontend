@@ -32,7 +32,7 @@ class MaintenancePage extends Component {
             this.setState({isload:false})
         })
         this.setState({isload:true})
-        window.history.back();
+        this.props.history.goBack()
     }
 
     handleSelectCV1()

@@ -5,6 +5,7 @@ import { Text} from 'office-ui-fabric-react/lib/Text';
 import { IColumn,SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
 import {TextField, SearchBox} from '@fluentui/react'
 import {Link} from 'react-router-dom'
+import {withRouter} from 'react-router'
 import axios from 'axios'
 import { Icon } from '@fluentui/react/lib/Icon';
 import {DetailsList, DetailsListLayoutMode, IDetailsHeaderProps, 
@@ -173,7 +174,7 @@ class UserPage extends Component {
         }).catch(e=>console.log(e))
         localStorage.setItem('token','')
         myStore.setState({auth:''})
-        window.location.href='/#/login'
+        this.props.history.push('/login')
     }
     _onItemInvoked(item) {
         alert(`Item invoked: ${item.name}`);
@@ -273,4 +274,4 @@ class UserPage extends Component {
     }
 }
  
-export default UserPage;
+export default withRouter(UserPage);

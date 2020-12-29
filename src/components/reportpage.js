@@ -1,6 +1,7 @@
 import React from 'react'
 import {ComboBox,Dropdown,Label,PrimaryButton, DatePicker, DayOfWeek, IDatePickerStrings,Icon, SearchBox,DefaultButton} from '@fluentui/react';
 import './reportpage.scss'
+import {withRouter} from 'react-router'
 import {DetailsList, DetailsListLayoutMode, IDetailsHeaderProps, Selection, ConstrainMode, IDetailsFooterProps, DetailsRow,} from 'office-ui-fabric-react/lib/DetailsList';
 import { IRenderFunction } from 'office-ui-fabric-react/lib/Utilities';
 import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip';
@@ -204,7 +205,7 @@ class ReportPage extends React.Component{
         }).catch(e=>console.log(e))
         localStorage.setItem('token','')
         myStore.setState({auth:''})
-        window.location.href='/#/login'
+        this.props.history.push('/login')
     }
     render(){
         return(
@@ -348,4 +349,4 @@ class ReportPage extends React.Component{
     }
 }
 
-export default ReportPage
+export default withRouter(ReportPage)
