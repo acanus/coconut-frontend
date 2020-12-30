@@ -74,9 +74,9 @@ class ConveyorControl extends Component {
                 <h3 >Điều khiển hệ thống</h3>
                 <div style={{marginBottom:'4px'}}>
                     <Stack tokens={{childrenGap:12}} horizontal style={{alignItems:'center'}}>
-                        <PrimaryButton  iconProps={{iconName:'Play'}} filled text='Tiếp tục' onClick={(e)=>{e.preventDefault(); this.handleStartConveyor()}} >
+                        <PrimaryButton  iconProps={{iconName:'Play'}} filled text='Tiếp tục' onClick={(e)=>this.handleStartConveyor(e)} >
                         </PrimaryButton>
-                        <PrimaryButton iconProps={{iconName:'Stop'}} text='Tạm dừng' onClick={(e)=>{e.preventDefault(); this.handleStopConveyor()}} ></PrimaryButton>
+                        <PrimaryButton iconProps={{iconName:'Stop'}} text='Tạm dừng' onClick={(e)=>this.handleStopConveyor(e)} ></PrimaryButton>
                     </Stack>
                 </div>
                 <h3 >Vào chế độ thủ công</h3>      

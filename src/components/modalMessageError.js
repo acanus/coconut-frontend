@@ -1,5 +1,6 @@
 import React from 'react'
 import {Modal, PrimaryButton} from '@fluentui/react'
+import {withRouter} from 'react-router';
 class MessageError extends React.Component {
     constructor(props) {
         super(props);
@@ -16,4 +17,4 @@ class MessageError extends React.Component {
         )
     }
 }
-export default MessageError 
+export default withRouter(MessageError) 
