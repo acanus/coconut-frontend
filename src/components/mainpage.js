@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import './mainpage.scss';
 import { DefaultButton, PrimaryButton, Stack, IStackTokens ,Modal,IconButton} from 'office-ui-fabric-react';
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Text } from 'office-ui-fabric-react/lib/Text';
 import { DetailsList, DetailsListLayoutMode, Selection, IColumn,SelectionMode } from 'office-ui-fabric-react/lib/DetailsList';
 import Emegency from './emegency.js'
@@ -17,6 +18,7 @@ class MainPage extends Component {
 
         super(props);
         this.state = {
+            showMessage:false,
             showEmegency:false,
             transportStatus:false,
             conveyor1:false,
@@ -131,6 +133,7 @@ class MainPage extends Component {
 
             } else {
                 this.setState({transportStatus:Response.data})
+                this.updateTransport();
             }
             
         }).catch((error)=>{})
@@ -191,18 +194,26 @@ class MainPage extends Component {
             'Content-Type':'application/json',
             "Access-Control-Allow-Origin": "*"
             }
+        }).then((Response)=>{
+            //this.updateTransport();
         })
-        this.updateTransport();
+        
     }
     handleStopTransport(e){
         e.preventDefault();
+        this.setState({showMessage:true})
         axios.get(this.props.url+'/api/data/FinishTransportSession',{
             headers: {
             'Content-Type':'application/json',
             "Access-Control-Allow-Origin": "*"
             }
+        }).then((Response)=>{
+            this.setState({showMessage:false})
+            //this.updateTransport();
         })
-        this.updateTransport();
+        
+      
+        
     }
     updateImport(){
         axios.get(this.props.url+'/api/data/GetCurrentImportSession',{
@@ -285,6 +296,14 @@ class MainPage extends Component {
     render() { 
         return ( 
             <div className='mainlayout'>
+                {this.state.showMessage?
+                    <div className='loginbox1' >
+                        <Spinner className='loader'  size={SpinnerSize.large}  label='Đang dừng băng tải' style={{marginTop:'20px',fontSize:'15px'}} >
+                        
+                        </Spinner>
+                    </div>:null
+                }
+                
                 {this.state.showEmegency?<Emegency url={this.props.url}  onClose={(e)=>{e.preventDefault(); this.setState({showEmegency:false})}}></Emegency>:null}
                 {this.state.modalOpen?<NewImportSession isAdminManager={this.state.isAdminManager} url={this.props.url} onClose={(e)=>{e.preventDefault(); this.setState({modalOpen:false});this.updateImport()}}></NewImportSession>:null}
                 {this.state.conveyorOpen?<ConveyorControl isAdminManager={this.state.isAdminManager} url={this.props.url}  onClose={(e)=>{e.preventDefault(); this.setState({conveyorOpen:false})}}></ConveyorControl>:null}
@@ -371,7 +390,7 @@ class MainPage extends Component {
                         <div className={this.state.transportStatus? 'headerButtonText disabled':'headerButtonText'} onClick={(e)=>{e.preventDefault(); this.handleStartTransport(e)}}>
                             Bắt đầu vận chuyển
                         </div>
-                        <div className={this.state.transportStatus? 'headerButtonText':'headerButtonText disabled'} onClick={(e)=>{e.preventDefault() ;this.handleStopTransport(e)}}>
+                        <div className={(this.state.transportStatus&!this.state.showMessage)? 'headerButtonText':'headerButtonText disabled'} onClick={(e)=>{e.preventDefault() ;this.handleStopTransport(e)}}>
                             Kết thúc vận chuyển
                         </div>
                     </div>
