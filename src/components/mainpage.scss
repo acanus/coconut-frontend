@@ -166,7 +166,20 @@
         flex-direction: row;
         .leftcontent
         {
-             width: auto;  
+             width: auto; 
+             .count{
+                margin-top: 20px;
+                margin-bottom:0px;
+                width: 100%;
+               display: flex;
+               .col{
+                   display: flex;
+                   flex-direction: column;
+                   flex: 50%;
+                   text-align: center;
+               }
+               
+            } 
         }
         .centercontent{
             display: flex;

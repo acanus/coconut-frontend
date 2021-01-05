@@ -304,6 +304,8 @@ class ReportPage extends React.Component{
                                     CoconutType:value.CoconutType,
                                     Region:value.Region,
                                     Transporter:value.Transporter,
+                                    Weigth:value.Weight,
+                                    Count:value.Count,
                                     WarehouseLocation:value.WarehouseLocation,
                                     ConveyorID:value.ConveyorID==0?'Băng tải 2':'Cả hai băng tải',
                                     Date: value.Date,

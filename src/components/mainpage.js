@@ -18,6 +18,8 @@ class MainPage extends Component {
 
         super(props);
         this.state = {
+            totalImport:0,
+            weightImport:0,
             showMessage:false,
             showEmegency:false,
             transportStatus:false,
@@ -107,7 +109,14 @@ class MainPage extends Component {
         axios.get(this.props.url+'/api/inspection/GetCount',{timeout:'500'}).then((Response)=>{
             this.setState({count:Response.data})
         }).catch((error)=>{})
+        //get count
+        axios.get(this.props.url+'/api/inspection/GetCountImport',{timeout:'500'}).then((Response)=>{
+            this.setState({totalImport:Response.data})
+        }).catch((error)=>{})
         //get weight
+        axios.get(this.props.url+'/api/inspection/GetWeightImport',{timeout:'500'}).then((Response)=>{
+            this.setState({weightImport:Response.data})
+        }).catch((error)=>{})
         axios.get(this.props.url+'/api/plc/Get_Weight_Value',{timeout:'500'}).then((Response)=>{
             this.setState({weight:Response.data})
         }).catch((error)=>{})
@@ -377,6 +386,16 @@ class MainPage extends Component {
                 </div>
                 <div className="contentContainer">
                     <div className="leftcontent">
+                        <div className='count'>
+                                <div className='col'>
+                                     Số lượng
+                                <Text  variant='xxLarge'>{this.state.totalImport}</Text>
+                                </div>
+                                <div className='col'>
+                                    Khối lượng
+                                    <Text  variant='xxLarge'>{this.state.weightImport}</Text>
+                                </div>
+                            </div>
                     <DetailsList
                         items={this.state.items}
                         columns={this._columns}
@@ -406,11 +425,11 @@ class MainPage extends Component {
                     <div className="centercontent">
                             <div className='count'>
                                 <div className='col'>
-                                     Số lượng
+                                     Số lượng vận chuyển
                                 <Text  variant='mega'>{this.state.count}</Text>
                                 </div>
                                 <div className='col'>
-                                    Khối lượng
+                                    Khối lượng vận chuyển
                                     <Text  variant='mega'>{this.state.weight}</Text>
                                 </div>
                             </div>
