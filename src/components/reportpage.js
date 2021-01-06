@@ -71,7 +71,9 @@ class ReportPage extends React.Component{
                 Transporter: "",
                 Date:"" ,
                 Vendor:"",
-                EndTime:""        
+                EndTime:"",
+                Count:"",
+                Weight:""        
             }], 
             items2:[],
         }
@@ -116,7 +118,9 @@ class ReportPage extends React.Component{
             { key: 'column8', name: 'Băng tải lên dừa', fieldName: 'ConveyorID', minWidth: 140,  isResizable: true },
             { key: 'column10', name: 'Thời điểm bắt đầu', fieldName: 'Date', minWidth: 140, maxWidth:160, isResizable: true },
             { key: 'column11', name: 'Thời điểm kết thúc', fieldName: 'EndTime', minWidth: 140, maxWidth:160, isResizable: true },
-            { key: 'column12', name: 'Nhà cung cấp', fieldName: 'Vendor', minWidth: 140, maxWidth:160, isResizable: true }
+            { key: 'column12', name: 'Nhà cung cấp', fieldName: 'Vendor', minWidth: 140, maxWidth:160, isResizable: true },
+            { key: 'column13', name: 'Số lượng', fieldName: 'Count', minWidth: 140, maxWidth:160, isResizable: true },
+            { key: 'column14', name: 'Khối lượng', fieldName: 'Weight', minWidth: 140, maxWidth:160, isResizable: true }
         ];
         this._columns2 = [
 

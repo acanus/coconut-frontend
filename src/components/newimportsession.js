@@ -93,6 +93,13 @@ class NewImportSession extends Component {
                this.props.onClose(e)
            }
         })
+
+        axios.get(this.props.url+'/api/inspection/startimport',{
+            headers: {
+            'Content-Type':'application/json',
+            "Access-Control-Allow-Origin": "*"
+            }
+        })
     }
     
     render() { 

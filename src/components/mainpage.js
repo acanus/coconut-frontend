@@ -282,16 +282,17 @@ class MainPage extends Component {
         })
        
     }
-    // handleStartConveyor(e){
-    //     e.preventDefault()
-    //     axios.get(this.props.url+'/api/inspection/continue',{
-    //         headers: {
-    //         'Content-Type':'application/json',
-    //         "Access-Control-Allow-Origin": "*"
-    //         }
-    //     })
+    handleStopImport(e){
+        e.preventDefault()
+        axios.get(this.props.url+'/api/inspection/stopimport',{
+            headers: {
+            'Content-Type':'application/json',
+            "Access-Control-Allow-Origin": "*"
+            }
+        })
+        this.setState({transportStatus: false});
         
-    // }
+    }
     // handleStopConveyor(e){
     //     e.preventDefault()
     //     axios.get(this.props.url+'/api/inspection/pause',{
@@ -321,10 +322,10 @@ class MainPage extends Component {
                         <div className='headerButtonText' onClick={(e)=> {e.preventDefault(); this.setState({modalOpen:true})}}>
                             Nhập kho mới
                         </div>
-                        {/* <div className='headerButtonText' onClick={(e)=>this.handleStartConveyor(e)} >
-                            Chạy băng tải
+                        <div className='headerButtonText' onClick={(e)=>this.handleStopImport(e)} >
+                            Kết thúc nhập kho
                         </div>
-                        <div className='headerButtonText' onClick={(e)=>this.handleStopConveyor(e)} >
+                        {/* <div className='headerButtonText' onClick={(e)=>this.handleStopConveyor(e)} >
                             Dừng băng tải
                         </div> */}
                     </div>
