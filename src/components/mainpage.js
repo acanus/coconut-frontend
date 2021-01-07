@@ -290,7 +290,6 @@ class MainPage extends Component {
             "Access-Control-Allow-Origin": "*"
             }
         })
-        this.setState({transportStatus: false});
         
     }
     // handleStopConveyor(e){
@@ -322,7 +321,7 @@ class MainPage extends Component {
                         <div className='headerButtonText' onClick={(e)=> {e.preventDefault(); this.setState({modalOpen:true})}}>
                             Nhập kho mới
                         </div>
-                        <div className='headerButtonText' onClick={(e)=>this.handleStopImport(e)} >
+                        <div className='headerButtonText' onClick={(e)=>this.handleStopImport(e)}>
                             Kết thúc nhập kho
                         </div>
                         {/* <div className='headerButtonText' onClick={(e)=>this.handleStopConveyor(e)} >
