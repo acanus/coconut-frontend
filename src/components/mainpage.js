@@ -63,9 +63,9 @@ class MainPage extends Component {
             { key: 'column2', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
           ];
           this._columns3 = [
-            { key: 'column1', name: 'Lượt vận chuyển', fieldName: 'name', minWidth: 100, maxWidth: 200, isResizable: true },
-            { key: 'column2', name: 'Tổng số lượng', fieldName: 'value1', minWidth: 100, maxWidth: 200, isResizable: true },
-            { key: 'column3', name: 'Tổng khối lượng', fieldName: 'value2', minWidth: 100, maxWidth: 200, isResizable: true },
+            { key: 'column1', name: 'Lượt vận chuyển', fieldName: 'name', minWidth: 110, maxWidth: 150, isResizable: true },
+            { key: 'column2', name: 'Tổng số lượng', fieldName: 'value1', minWidth: 100, maxWidth: 150, isResizable: true },
+            { key: 'column3', name: 'Tổng khối lượng', fieldName: 'value2', minWidth: 120, maxWidth: 150, isResizable: true },
           ];
         this.handleClickBelt1=this.handleClickBelt1.bind(this)
         this.handleClickBelt2=this.handleClickBelt2.bind(this)
@@ -236,8 +236,8 @@ class MainPage extends Component {
                     {key:1,name:'Mã lô dừa',value:Response.data.ImportCode},
                     {key:2,name:'Nhân viên thu mua',value:Response.data.BuyerUser.Name},
                     {key:3,name:'Nhân viên thủ kho',value:Response.data.WarehouseUser.Name},
-                    {key:4,name:'Tiêu chuẩn',value:Response.data.ImportCode},
-                    {key:5,name:'Loại dừa',value:Response.data.Standard},
+                    {key:4,name:'Tiêu chuẩn',value:Response.data.Standard},
+                    {key:5,name:'Loại dừa',value:Response.data.CoconutType},
                     {key:6,name:'Đơn vị vận chuyển',value:Response.data.Transporter},
                     {key:7,name:'Vùng',value:Response.data.Region},
                     {key:8,name:'Vị trí lưu kho',value:Response.data.WarehouseLocation},

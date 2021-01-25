@@ -1,7 +1,7 @@
 {
   "name": "coconut-frontend",
   "author": "acanus",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "private": true,
   "dependencies": {
     "@fluentui/react": "^7.150.0",
